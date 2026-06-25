@@ -1,4 +1,16 @@
-// ===== Bijoux2luxe - Script Principal =====
+// ===== Bijoux2luxe - Script Principal (Optimisé) =====
+
+// ===== Throttle Utility =====
+function throttle(func, delay) {
+    let lastCall = 0;
+    return function(...args) {
+        const now = Date.now();
+        if (now - lastCall >= delay) {
+            lastCall = now;
+            func(...args);
+        }
+    };
+}
 
 // ===== Initialization =====
 function init() {
@@ -11,16 +23,16 @@ function init() {
     console.log('✅ Bijoux2luxe - Ready!');
 }
 
-// ===== Magic Particles =====
+// ===== Magic Particles (Réduit pour performance) =====
 function setupMagicParticles() {
-    const particlesCount = 28;
+    const particlesCount = 12; // Réduit de 28 à 12
     const overlay = document.querySelector('.site-magic-overlay');
     if (!overlay) return;
 
     for (let i = 0; i < particlesCount; i++) {
         const star = document.createElement('span');
         const size = Math.random() > 0.6 ? 8 + Math.random() * 10 : 3 + Math.random() * 4;
-        const speed = 3 + Math.random() * 3;
+        const speed = 4 + Math.random() * 3;
         star.className = 'magic-star';
         star.style.left = `${Math.random() * 100}%`;
         star.style.top = `${Math.random() * 100}%`;
@@ -28,18 +40,19 @@ function setupMagicParticles() {
         star.style.height = `${size}px`;
         star.style.animationDuration = `${speed}s`;
         star.style.animationDelay = `${Math.random() * 4}s`;
-        star.style.opacity = size > 8 ? '0.7' : '0.35';
+        star.style.opacity = size > 8 ? '0.6' : '0.3';
+        star.style.willChange = 'transform';
         overlay.appendChild(star);
     }
 }
 
-// ===== Scroll Particles =====
+// ===== Scroll Particles (Réduit + Throttled) =====
 function setupScrollParticles() {
     const overlay = document.querySelector('.site-magic-overlay');
     if (!overlay) return;
 
     const scrollParticles = [];
-    const particlesCount = 16;
+    const particlesCount = 8; // Réduit de 16 à 8
     for (let i = 0; i < particlesCount; i++) {
         const particle = document.createElement('span');
         const size = Math.random() > 0.7 ? 10 + Math.random() * 12 : 4 + Math.random() * 4;
@@ -50,6 +63,7 @@ function setupScrollParticles() {
         particle.style.height = `${size}px`;
         particle.dataset.speedX = (Math.random() - 0.5) * 0.05;
         particle.dataset.speedY = (Math.random() - 0.2) * 0.06;
+        particle.style.willChange = 'transform';
         overlay.appendChild(particle);
         scrollParticles.push(particle);
     }
@@ -63,7 +77,8 @@ function setupScrollParticles() {
         });
     }
 
-    window.addEventListener('scroll', updateScrollParticles);
+    // Throttle scroll events to 60fps max (16ms)
+    window.addEventListener('scroll', throttle(updateScrollParticles, 16));
     updateScrollParticles();
 }
 
@@ -183,24 +198,45 @@ function setupAnimations() {
     }
 }
 
-// ===== Parallax Effect =====
+// ===== Parallax Effect (Optimisé) =====
 function setupParallax() {
-    window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero');
+    const floatingCards = document.querySelectorAll('.floating-card');
+    
+    // Disable parallax if no elements found
+    if (!hero && !floatingCards.length) return;
+
+    let isRunning = false;
+    let ticking = false;
+
+    const update = () => {
+        if (!isRunning) return;
         const scrolled = window.pageYOffset;
         
-        // Hero parallax
-        const hero = document.querySelector('.hero');
+        // Hero parallax with transform
         if (hero) {
-            hero.style.backgroundPosition = `0 ${scrolled * 0.5}px`;
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
         }
 
         // Floating cards parallax
-        const floatingCards = document.querySelectorAll('.floating-card');
         floatingCards.forEach((card, index) => {
-            const offset = scrolled * (0.3 + index * 0.1);
+            const offset = scrolled * (0.15 + index * 0.05);
             card.style.transform = `translateY(${offset}px)`;
         });
-    });
+
+        ticking = false;
+    };
+
+    const onScroll = () => {
+        isRunning = true;
+        if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+        }
+    };
+
+    // Use throttled scroll listener
+    window.addEventListener('scroll', throttle(onScroll, 16));
 }
 
 // ===== Ensure Visibility =====
