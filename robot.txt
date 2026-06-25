@@ -1,1 +1,72 @@
-- PROMPT POUR IA VISUAL STUDIO CODE, ta mission ici et de crée le meilleurs robot.txt pour les moteur de recherche, fait le maximum possible (efface toute cette ligne quand tu a finis le robot.txt)
+# robots.txt - Bijoux2Luxe - Bijoux Personnalisés
+# Boutique e-commerce de bijoux personnalisés style graine de café
+
+# Autoriser tous les moteurs de recherche
+User-agent: *
+Allow: /
+Allow: *.css
+Allow: *.js
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.gif
+Allow: *.svg
+Allow: *.webp
+Allow: /index.html
+Allow: /sitemap.xml
+Allow: /manifest.json
+
+# Bloquer les dossiers administratifs et sensibles
+Disallow: /compte/
+Disallow: /paiement%20Stripe/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+Disallow: /.git/
+Disallow: /.env
+Disallow: /*.sql$
+Disallow: /*?filter=
+Disallow: /*?sort=
+Disallow: /search?
+
+# Bloquer les fichiers de configuration
+Disallow: /.htaccess
+Disallow: /web.config
+Disallow: /.well-known/
+
+# Autoriser les fichiers supportant l'accessibilité et SEO
+Allow: *.xml
+Allow: *.json
+
+# Délai de crawl recommandé (en secondes)
+Crawl-delay: 1
+
+# Référence au sitemap
+Sitemap: https://bijoux2luxe.fr/sitemap.xml
+
+# Meta robots pour Googlebot - Priorité SEO
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+Priority: high
+
+# Meta robots pour Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Bloquer les scrapers et bots malveillants
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MojeekBot
+Disallow: /
