@@ -1,4 +1,4 @@
-// ===== Bijoux2luxe - Script Principal (Optimisé) =====
+// ===== Bijou2luxe - Script Principal (Optimisé) =====
 
 // ===== Throttle Utility =====
 function throttle(func, delay) {
@@ -14,13 +14,13 @@ function throttle(func, delay) {
 
 // ===== Initialization =====
 function init() {
-    console.log('🎁 Bijoux2luxe - Initializing...');
+    console.log('🎁 Bijou2luxe - Initializing...');
     setupMagicParticles();
     setupScrollParticles();
     setupSmoothScroll();
     setupGalleryLightbox();
     setupAnimations();
-    console.log('✅ Bijoux2luxe - Ready!');
+    console.log('✅ Bijou2luxe - Ready!');
 }
 
 // ===== Magic Particles (Réduit pour performance) =====
