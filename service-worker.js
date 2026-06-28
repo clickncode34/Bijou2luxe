@@ -1,7 +1,7 @@
 // Service Worker pour Bijoux Deluxe
 // Permet le fonctionnement hors ligne et l'amélioration des performances
 
-const CACHE_NAME = 'bijoux-deluxe-v1';
+const CACHE_NAME = 'bijou2luxe-v1';
 const CACHE_URLS = [
   './',
   './index.html',
@@ -102,12 +102,12 @@ self.addEventListener('push', event => {
     body: data.body || 'Nouvelle notification',
     icon: './image_logo_video/icon-192.png',
     badge: './image_logo_video/icon-192.png',
-    tag: 'bijoux-deluxe-notification',
+    tag: 'bijou2luxe-notification',
     requireInteraction: false
   };
   
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Bijoux Deluxe', options)
+    self.registration.showNotification(data.title || 'Bijou2Luxe', options)
   );
 });
 
