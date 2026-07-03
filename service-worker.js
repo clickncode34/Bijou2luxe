@@ -1,13 +1,23 @@
 // Service Worker pour Bijoux Deluxe
 // Permet le fonctionnement hors ligne et l'amélioration des performances
 
-const CACHE_NAME = 'bijou2luxe-v1';
+const CACHE_NAME = 'bijou2luxe-v2';
 const CACHE_URLS = [
   './',
   './index.html',
   './style.css',
   './script.js',
-  './manifest.json'
+  './manifest.json',
+  './image_logo_video/logo b2l.png',
+  './image_logo_video/presentation.mp4',
+  './image_logo_video/1.jpg',
+  './image_logo_video/2.jpg',
+  './image_logo_video/3.jpg',
+  './image_logo_video/4.jpg',
+  './image_logo_video/5.jpg',
+  './image_logo_video/6.jpg',
+  './image_logo_video/7.jpg',
+  './image_logo_video/8.jpg'
 ];
 
 // Installation du Service Worker
