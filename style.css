@@ -1772,12 +1772,11 @@ body {
     .product-preview-image {
         height: 280px;
     }
-
+    /* Use overlay arrows so the image keeps full width/height */
     .product-preview-slider {
-        /* keep three columns so navs remain visible on small screens */
-        grid-template-columns: 44px 1fr 44px;
-        align-items: center;
+        grid-template-columns: 1fr;
         position: relative;
+        align-items: center;
     }
 
     .product-preview-nav {
@@ -1787,20 +1786,30 @@ body {
         align-items: center;
         justify-content: center;
         font-size: 22px;
-        position: relative;
-        background: rgba(17,17,17,0.9);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.35);
         color: #fff;
-        z-index: 30;
+        border-radius: 999px;
+        z-index: 40;
         box-shadow: 0 6px 18px rgba(0,0,0,0.28);
         touch-action: manipulation;
+        backdrop-filter: blur(6px);
+        transition: background 0.18s ease, transform 0.12s ease;
+        padding: 6px;
     }
 
-    /* increase hit area on very small screens */
-    .product-preview-prev,
-    .product-preview-next {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
+    .product-preview-prev { left: 12px; }
+    .product-preview-next { right: 12px; }
+
+    .product-preview-nav:active { transform: translateY(-50%) scale(0.98); }
+
+    /* make sure the image is fully visible and not cropped */
+    .product-preview-image {
+        height: auto;
+        max-height: 60vh;
+        object-fit: contain;
     }
 }
 
