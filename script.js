@@ -147,6 +147,40 @@ function setupGalleryLightbox() {
     prevButton.addEventListener('click', () => goTo(currentIndex - 1));
     nextButton.addEventListener('click', () => goTo(currentIndex + 1));
 
+    // Touch / swipe support for mobile
+    (function() {
+        let startX = 0;
+        let currentX = 0;
+        let isMoving = false;
+        const inner = overlay.querySelector('.lightbox-inner');
+
+        inner.addEventListener('touchstart', (e) => {
+            if (!e.touches || e.touches.length > 1) return;
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            isMoving = true;
+        }, { passive: true });
+
+        inner.addEventListener('touchmove', (e) => {
+            if (!isMoving || !e.touches || e.touches.length > 1) return;
+            currentX = e.touches[0].clientX;
+        }, { passive: true });
+
+        inner.addEventListener('touchend', (e) => {
+            if (!isMoving) return;
+            const dx = currentX - startX;
+            const threshold = 40; // minimal px to qualify as swipe
+            if (Math.abs(dx) > threshold) {
+                if (dx > 0) {
+                    goTo(currentIndex - 1);
+                } else {
+                    goTo(currentIndex + 1);
+                }
+            }
+            startX = 0; currentX = 0; isMoving = false;
+        });
+    })();
+
     overlay.addEventListener('click', (event) => {
         if (event.target === overlay) {
             closeLightbox();
@@ -238,6 +272,40 @@ function setupProductPreviewModal() {
     closeButton.addEventListener('click', closePreview);
     prevButton.addEventListener('click', () => showImage(currentIndex - 1));
     nextButton.addEventListener('click', () => showImage(currentIndex + 1));
+
+    // Touch / swipe support for product preview modal
+    (function() {
+        let startX = 0;
+        let currentX = 0;
+        let isMoving = false;
+        const slider = overlay.querySelector('.product-preview-slider');
+
+        slider.addEventListener('touchstart', (e) => {
+            if (!e.touches || e.touches.length > 1) return;
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            isMoving = true;
+        }, { passive: true });
+
+        slider.addEventListener('touchmove', (e) => {
+            if (!isMoving || !e.touches || e.touches.length > 1) return;
+            currentX = e.touches[0].clientX;
+        }, { passive: true });
+
+        slider.addEventListener('touchend', (e) => {
+            if (!isMoving) return;
+            const dx = currentX - startX;
+            const threshold = 40;
+            if (Math.abs(dx) > threshold) {
+                if (dx > 0) {
+                    showImage(currentIndex - 1);
+                } else {
+                    showImage(currentIndex + 1);
+                }
+            }
+            startX = 0; currentX = 0; isMoving = false;
+        });
+    })();
 
     overlay.addEventListener('click', (event) => {
         if (event.target === overlay) {
