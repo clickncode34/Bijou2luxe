@@ -19,6 +19,7 @@ function init() {
     setupScrollParticles();
     setupSmoothScroll();
     setupGalleryLightbox();
+    setupProductPreviewModal();
     setupAnimations();
     console.log('✅ Bijou2luxe - Ready!');
 }
@@ -159,6 +160,99 @@ function setupGalleryLightbox() {
             goTo(currentIndex - 1);
         } else if (event.key === 'ArrowRight') {
             goTo(currentIndex + 1);
+        }
+    });
+}
+
+// ===== Product Preview Modal =====
+function setupProductPreviewModal() {
+    const buttons = Array.from(document.querySelectorAll('.preview-btn'));
+    if (!buttons.length) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'product-preview-modal';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = `
+        <div class="product-preview-dialog" role="dialog" aria-modal="true" aria-label="Exemples du produit">
+            <button class="product-preview-close" aria-label="Fermer">×</button>
+            <div class="product-preview-slider">
+                <button class="product-preview-nav product-preview-prev" aria-label="Image précédente">‹</button>
+                <img class="product-preview-image" src="" alt="">
+                <button class="product-preview-nav product-preview-next" aria-label="Image suivante">›</button>
+            </div>
+            <div class="product-preview-content">
+                <h3 class="product-preview-title"></h3>
+                <p class="product-preview-description">Exemples de style, finitions et personnalisation.</p>
+                <div class="product-preview-actions">
+                    <a href="#" class="add-btn product-preview-buy" target="_blank" rel="noopener noreferrer">Acheter maintenant</a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const imageView = overlay.querySelector('.product-preview-image');
+    const titleView = overlay.querySelector('.product-preview-title');
+    const descriptionView = overlay.querySelector('.product-preview-description');
+    const buyLink = overlay.querySelector('.product-preview-buy');
+    const closeButton = overlay.querySelector('.product-preview-close');
+    const prevButton = overlay.querySelector('.product-preview-prev');
+    const nextButton = overlay.querySelector('.product-preview-next');
+
+    let currentImages = [];
+    let currentIndex = 0;
+
+    const showImage = (index) => {
+        if (!currentImages.length) return;
+        if (index < 0) index = currentImages.length - 1;
+        if (index >= currentImages.length) index = 0;
+        currentIndex = index;
+        imageView.src = currentImages[index];
+    };
+
+    const openPreview = (images, title, link) => {
+        currentImages = images.filter(Boolean);
+        if (!currentImages.length) return;
+        showImage(0);
+        titleView.textContent = title || 'Exemples du produit';
+        buyLink.href = link || '#';
+        buyLink.style.display = link ? 'inline-flex' : 'none';
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closePreview = () => {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    };
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const images = (button.dataset.previewImages || '').split(',').map(item => item.trim());
+            openPreview(images, button.dataset.previewTitle, button.dataset.previewLink);
+        });
+    });
+
+    closeButton.addEventListener('click', closePreview);
+    prevButton.addEventListener('click', () => showImage(currentIndex - 1));
+    nextButton.addEventListener('click', () => showImage(currentIndex + 1));
+
+    overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+            closePreview();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (!overlay.classList.contains('active')) return;
+        if (event.key === 'Escape') {
+            closePreview();
+        } else if (event.key === 'ArrowLeft') {
+            showImage(currentIndex - 1);
+        } else if (event.key === 'ArrowRight') {
+            showImage(currentIndex + 1);
         }
     });
 }
